@@ -1,0 +1,22 @@
+const assert=require('node:assert/strict'),S=require('../assets/stats.js');
+let count=0;
+function test(name,fn){fn();count++;}
+test('Ondalık virgül, BOM, eksik, sıfır',()=>{const r=S.parseCSV('\uFEFFpuan;grup\r\n"1,5";A\r\n0;B\r\nNA;A');assert.equal(r.rows[0].puan,1.5);assert.equal(r.rows[1].puan,0);assert.equal(r.rows[2].puan,null);});
+test('Tırnaklı virgül ve çok satırlı alan',()=>{const r=S.parseCSV('ad,puan\n"a,b",3\n"iki\nsatır",4\n"a""b",5');assert.equal(r.rows[0].ad,'a,b');assert.equal(r.rows[1].ad,'iki\nsatır');assert.equal(r.rows[2].ad,'a"b');});
+test('Sütun sayısı uyumsuzluğu',()=>assert.throws(()=>S.parseCSV('x,y\n1,2,3')));
+test('Kapanmamış tırnak',()=>assert.throws(()=>S.parseCSV('x,y\n"1,2')));
+test('Tekrarlı başlık',()=>assert.throws(()=>S.parseCSV('x,x\n1,2')));
+test('Sonlu olmayan girdi',()=>assert.throws(()=>S.desc([1,Infinity])));
+test('Tek gözlemde betimleme',()=>{assert.equal(S.desc([1]).sd,null);assert.throws(()=>S.one([1],0));});
+test('Sabit değişken',()=>{assert.throws(()=>S.correlation([1,1,1],[2,3,4]));assert.throws(()=>S.one([1,1,1],1));});
+test('Eşleştirme uzunluğu',()=>assert.throws(()=>S.paired([1,2],[3,4,5])));
+test('Tüm farklar sıfır',()=>assert.throws(()=>S.wilcoxon([1,2,3],[1,2,3])));
+test('Sıralarda bağ düzeltmesi',()=>assert.deepEqual(S.ranks([3,1,1,2]).ranks,[4,1.5,1.5,3]));
+test('Dejenere sıra grupları',()=>assert.throws(()=>S.kruskal([[1,1],[1,1]])));
+test('Negatif ki-kare frekansı',()=>assert.throws(()=>S.chi([[2,-1],[3,4]])));
+test('Eksik bütün sütun',()=>{const r=S.parseCSV('x,y\n,2\nNA,3');assert.equal(r.rows[0].x,null);assert.equal(r.columns[0].type,'category');});
+test('Nesne prototipi anahtarı',()=>{const r=S.parseCSV('__proto__,x\na,1');assert.equal(Object.getPrototypeOf(r.rows[0]),Object.prototype);assert.equal(r.rows[0].__proto__,'a');});
+test('Tekrarlanabilir benzetim',()=>{const a=S.sampling([1,2,3,4],10,209),b=S.sampling([1,2,3,4],10,209);assert.deepEqual(a.means,b.means);assert.notDeepEqual(a.means,S.sampling([1,2,3,4],10,210).means);});
+test('U simetrisi',()=>{const a=S.mann([1,2,3],[4,5,6]),b=S.mann([4,5,6],[1,2,3]);assert.equal(a.p,b.p);assert.equal(a.effect,-b.effect);});
+test('Kusursuz ilişki',()=>{const r=S.correlation([1,2,3,4],[2,4,6,8]);assert.equal(r.r,1);assert.equal(r.lo,1);assert.equal(r.hi,1);});
+console.log(`${count} kenar durum kontrolü başarılı.`);

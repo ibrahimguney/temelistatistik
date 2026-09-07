@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Temel İstatistik: PDR Araştırmaları İçin Veri Okuryazarlığı kitabına eşlik eden öğrenci laboratuvarı. Veriyi inceleyin, analiz edin ve bulgularınızı yorumlayın.">
+  <meta name="theme-color" content="#173e48">
+  <title>Temel İstatistik · Öğrenci Laboratuvarı</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script defer src="assets/vendor/jstat.min.js"></script>
+  <script defer src="assets/data.js"></script>
+  <script defer src="assets/chapters.js"></script>
+  <script defer src="assets/stats.js"></script>
+  <script defer src="assets/app.js"></script>
+</head>
+<body>
+<a class="skip" href="#workspace">Çalışma alanına geç</a>
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="brand-symbol" aria-hidden="true">Σ</span><span>Temel İstatistik<small>ÖĞRENCİ LABORATUVARI</small></span></a>
+  <nav aria-label="Kaynaklar"><a href="https://github.com/ibrahimguney/temelistatistik">GitHub</a><a href="rehberler/ogrenci.html">Kullanım rehberi</a></nav>
+</header>
+<div class="shell">
+  <aside class="sidebar" aria-label="Kitap bölümleri">
+    <p class="eyebrow">KİTAPLA BİRLİKTE ÇALIŞ</p>
+    <h2>14 bölüm, tek çalışma alanı.</h2>
+    <label class="mobile-chapter" for="chapter-select">Bölüm seçin<select id="chapter-select"></select></label>
+    <nav id="chapters" aria-label="Bölümler"></nav>
+    <div class="sidebar-note"><strong>Prof. Dr. İbrahim Güney</strong><br>PDR Araştırmaları İçin<br>Veri Okuryazarlığı<br><span>2026 · Ders kitabı eşlikçisi</span></div>
+  </aside>
+  <main id="workspace">
+    <section class="chapter-intro" aria-labelledby="chapter-title">
+      <div class="intro-top"><p class="eyebrow" id="chapter-number"></p><span class="page-ref" id="page-ref"></span></div>
+      <h1 id="chapter-title">Veriyi inceleyin, sorunuzun izini sürün.</h1>
+      <p id="chapter-question" class="lead"></p>
+      <div id="objectives" class="objectives"></div>
+    </section>
+    <section class="panel data-panel" aria-labelledby="data-heading">
+      <div class="section-heading"><h2 id="data-heading"><span class="step">1</span>Verinizi seçin</h2><span id="data-count" class="quiet"></span></div>
+      <div class="data-controls"><label for="dataset">Veri seti<select id="dataset"></select></label><label class="upload-label" for="csv-file">Kendi CSV dosyanızı açın<input type="file" id="csv-file" accept=".csv,text/csv,text/plain"></label><button type="button" class="secondary" id="download-data">Veriyi indir</button></div>
+      <p id="data-source" class="source"></p>
+      <p class="micro">Dosyanız yalnız bu tarayıcıda işlenir. Ad, öğrenci numarası veya kimlik bilgisi içeren veri kullanmayın. CSV: en çok 5.000 satır, 50 sütun, 2 MB.</p>
+      <p role="status" id="upload-status" class="feedback"></p>
+      <details id="data-details"><summary>Veri önizlemesi ve değişken sözlüğü</summary><div id="data-preview" class="table-wrap" tabindex="0" aria-label="İlk 8 gözlem"></div><div id="dictionary" class="table-wrap" tabindex="0" aria-label="Değişken sözlüğü"></div></details>
+    </section>
+    <div class="analysis-grid">
+      <section class="panel control-panel" aria-labelledby="analysis-heading">
+        <h2 id="analysis-heading"><span class="step">2</span>Yöntemi uygulayın</h2>
+        <form id="analysis-form">
+          <label for="method">Yöntem<select id="method"></select></label>
+          <p id="method-hint" class="micro"></p>
+          <div id="variable-controls"></div>
+          <div class="two-col"><label for="confidence">Güven düzeyi<select id="confidence"><option value="0.9">%90</option><option value="0.95" selected>%95</option><option value="0.99">%99</option></select></label><label for="null-value" id="null-label">H₀ ortalaması<input id="null-value" type="number" value="10" step="any"></label></div>
+          <div id="simulation-controls" hidden><label for="sample-size">Her örnekte gözlem sayısı<select id="sample-size"><option>10</option><option selected>30</option><option>100</option></select></label><label for="seed">Rassal tohum<input id="seed" type="number" value="209" step="1" min="0" max="4294967295"></label><p class="micro">500 tekrar, yerine koyarak seçim. Aynı tohum aynı sonucu üretir.</p></div>
+          <button class="primary" type="submit">Analizi çalıştır <span aria-hidden="true">↗</span></button>
+        </form>
+        <details class="assumptions" open><summary>Sonuçtan önce kontrol edin</summary><ul id="assumptions"></ul></details>
+      </section>
+      <section class="panel result-panel" aria-labelledby="result-heading">
+        <div class="section-heading"><h2 id="result-heading"><span class="step">3</span>Sonucu okuyun</h2><span id="result-state" class="quiet"></span></div>
+        <div id="results" aria-live="polite" aria-atomic="true"><p>Hazır veriyi seçip analizi çalıştırın.</p></div>
+        <div id="chart"></div>
+        <p id="chart-description" class="micro"></p>
+        <details id="code-details"><summary>Aynı analizi R ile yeniden üretin</summary><p class="micro">“Veriyi indir” ile aldığınız dosyayı R çalışma klasörüne koyun. Aşağıdaki kodu çalıştırın.</p><pre><code id="r-code"></code></pre><button class="secondary" id="download-code" type="button">R kodunu indir</button></details>
+      </section>
+    </div>
+    <section class="panel activity-panel" aria-labelledby="activity-heading">
+      <div class="section-heading"><h2 id="activity-heading"><span class="step">4</span>Yorumlayın ve raporlayın</h2><button type="button" class="secondary" id="download-report">Çalışma raporunu indir</button></div>
+      <div class="activity-grid"><div><p class="eyebrow">BÖLÜM GÖREVİ</p><ol id="tasks"></ol><details><summary>İpucunu göster</summary><p id="chapter-hint"></p></details><p class="reflection" id="reflection"></p></div>
+      <div class="journal"><label for="research-question">Araştırma sorum ve yöntem seçimim<textarea id="research-question" rows="3" placeholder="Hangi soruyu yanıtlıyorum? Değişkenlerim ve uygun yöntemim nedir?"></textarea></label><label for="interpretation">Bulgum ve yorumum<textarea id="interpretation" rows="3" placeholder="Yön, büyüklük, belirsizlik ve PDR bağlamı…"></textarea></label><label for="limitations">Varsayımlar ve sınırlılıklar<textarea id="limitations" rows="2" placeholder="Eksik veri, tasarım, örnekleme ve nedensel yorum sınırları…"></textarea></label><p class="micro">Notlarınız bu açık sayfada kalır. Ayrılmadan önce raporu indirin; öğretmene otomatik gönderilmez.</p></div></div>
+    </section>
+    <footer><span>Temel İstatistik · PDR 209</span><a href="rehberler/ogretim-elemani.md">Öğretim elemanı rehberi</a><a href="veriler/KAYNAKLAR.md">Veri kaynakları ve lisanslar</a></footer>
+  </main>
+</div>
+<noscript><div class="noscript">Bu laboratuvarın analizleri için JavaScript’i etkinleştirin. Verileri GitHub deposundaki veriler klasöründen indirebilirsiniz.</div></noscript>
+</body>
+</html>
